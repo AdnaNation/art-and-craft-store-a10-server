@@ -28,7 +28,7 @@ async function run() {
     await client.connect();
 
     const artCollection = client.db('artAndCraftDB').collection('paintingAndDrawing');
-    const myArtCollecton = client.db('myArtDB').collection('myARt');
+    const allArtCollection = client.db('allArtDB').collection('allArt');
 
     app.get('/artAndCraft',async (req, res)=>{
         const cursor = artCollection.find();
@@ -46,9 +46,29 @@ async function run() {
     app.post('/myArt', async (req, res) => {
       const addedArt = req.body;
       console.log(addedArt);
-      const result = await myArtCollecton.insertOne(addedArt);
+      const result = await allArtCollection.insertOne(addedArt);
       res.send(result);
   })
+
+  app.get('/allArt', async (req, res) => {
+    const cursor = allArtCollection.find();
+    const result = await cursor.toArray();
+    res.send(result);
+})
+
+ app.delete('/allArt/:id', async (req, res) => {
+    const id = req.params.id;
+    const query = { _id: new ObjectId(id) }
+    const result = await allArtCollection.deleteOne(query);
+    res.send(result);
+})
+
+ app.get('/allArt/:id', async(req, res) => {
+        const id = req.params.id;
+        const query = {_id: new ObjectId(id)}
+        const result = await allArtCollection.findOne(query);
+        res.send(result);
+    })
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
