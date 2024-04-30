@@ -6,7 +6,9 @@ const port = process.env.PORT || 5000;
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 // middleware
-app.use(cors());
+app.use (cors({origin:["http://localhost:5173","https://art-and-craft-store-c82cd.web.app"]})) 
+
+app.use(cors())
 app.use(express.json())
 
 
@@ -25,7 +27,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
 
     const artCollection = client.db('artAndCraftDB').collection('paintingAndDrawing');
     const allArtCollection = client.db('allArtDB').collection('allArt');
